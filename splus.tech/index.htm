@@ -1,15 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <HTML>
 <HEAD>
     <META NAME="cplus.tech" Content="while one">
     <TITLE>#cplusplus</TITLE>
     <style>
         .wrapper {
+            cursor: crosshair;
             height: 20px;
             color: hsl(288, 90%, 41%);
             background-color: black;
             padding: 20px;
-            padding-left: 3%;
+            padding-left: 2%;
             margin: 0;
         }
         .lwrapper {
@@ -24,24 +25,52 @@
             width: -webkit-max-content;
             color: hsl(288, 90%, 41%);
         }
-        body { background-color: #808080; }
-        h1 {
-            color: hsl(1, 92%, 21%);
-            padding: 50px;
+        body {
+            background-image: url("https://img.icons8.com/all/500/c-plus-plus-logo.png");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-color: #808080;
         }
-        p {
-            color: hsl(0, 0%, 0%);
-            padding: 5px;
+        .screenleft {
+            font-stretch:extra-expanded;
+            font-size:xx-large;
+            font-size-adjust:inherit;
+            font-display:auto;
+            font-family:'Showcard Gothic';
+            position:sticky;
+            float: left;
+            padding: 70px 150px;
+            color: hsl(258, 46%, 49%);
         }
-        a {
+        .screenright {
+            font-stretch: extra-expanded;
+            font-size: xx-large;
+            font-size-adjust: inherit;
+            font-display: auto;
+            font-family: 'Showcard Gothic';
+            position: sticky;
+            float: right;
+            padding: 70px 150px;
+            color: hsl(258, 46%, 49%);
+        }
+        a{
             color: hsl(0, 0%, 100%);
-            padding: 0px 30px 0px 30px;
+            padding: 0px 10px 0px 10px;
+        }
+        p { 
+            font-display:auto;
+            font-stretch:extra-expanded;
+            font-size:20px;
+            font-family:'Times New Roman';
+            color: hsl(0, 0%, 100%);
+            text-align:center;
         }
         .button {
+            cursor: crosshair;
             padding: 5px 5px;
             font-size: 12px;
             text-align: center;
-            cursor: pointer;
             outline: none;
             color: hsl(0, 0%, 100%);
             background-color: hsl(288, 90%, 41%);
@@ -67,8 +96,10 @@
             <button class="button"><a href="https://github.com/Dies1rae"> GIT </a></button>
             <b>++</b>
             <button class="button"><a href="https://spb.hh.ru/resume/d1da1736ff00a860f20039ed1f736563726574"> CV </a></button>
+            <b>++</b>
+            <button class="button"><a href="mailto:unluck.bastard@gmail.com"> EMAIL </a></button>
         </div>
-        <b> </b>
+
         <div class="rwrapper">
             <button class="button"><a href="https://github.com/Dies1rae/snake"> SNAKE </a></button>
             <b>++</b>
@@ -77,9 +108,12 @@
             <button class="button"><a href="https://github.com/Dies1rae/chess"> CHESS </a></button>
         </div>
     </div>
+    <div class="screenleft">"Screen left"</div>
+    <div class="screenright">"Screen right"</div>
     
-
-    <h1 align="center"> "This resource powered by CPP"</h1>
-    <p align="center">"Poltavskiy Nick  contact page"</p>
+    <p>“If you think it's simple, then you</p>
+    <p>  have  misunderstood the problem.”</p>
+    <p>                  Bjarne Stroustrup</p>
+    
 </BODY>
 </HTML >

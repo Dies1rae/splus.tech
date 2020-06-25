@@ -9,7 +9,7 @@
 #include <iterator>
 #include <algorithm>
 void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
-	//client's request string e.g. GET /index.html HTTP/1.1
+	//client's request string e.g. GET /index.htm HTTP/1.1
 	std::istringstream iss(msg);
 	std::vector<std::string> parsed((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
 
