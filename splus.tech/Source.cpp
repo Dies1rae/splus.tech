@@ -13,12 +13,12 @@ int main(int argc, char* argv[]) {
 		if (argv[1][1] == 's') {
 			string IP = argv[2];
 			int port = stoi(argv[3]);
-			WebS TiKKColorServer(IP.c_str(), port);
-			if (TiKKColorServer.init() != 0) {
+			WebS siteserv(IP.c_str(), port);
+			if (siteserv.init() != 0) {
 				return 0;
 			}
 			cout << "Server started" << endl;
-			TiKKColorServer.run();
+			siteserv.run();
 			system("pause");
 		}
 		if (argv[1][1] == '?') {
@@ -29,8 +29,19 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	else {
-		cerr << "Error RTFM!" << endl;
-		return 0;
+		string IP = "0.0.0.0";
+		int port = 80;
+		WebS siteserv(IP.c_str(), port);
+		if (siteserv.init() != 0) {
+			return 0;
+		}
+		cout << "Server started" << endl;
+		siteserv.run();
+		//system("pause");
+		char ch;
+		do {
+			ch = getchar();
+		} while (ch != 0);
 	}
 	return 0;
 }
