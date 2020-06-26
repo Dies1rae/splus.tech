@@ -37,11 +37,7 @@ int main(int argc, char* argv[]) {
 		}
 		cout << "Server started" << endl;
 		siteserv.run();
-		//system("pause");
-		char ch;
-		do {
-			ch = getchar();
-		} while (ch != 0);
+		system("pause");
 	}
 	return 0;
 }
