@@ -1,6 +1,7 @@
 #pragma once
 #include <WS2tcpip.h>
 #pragma comment (lib, "ws2_32.lib")
+#define MAX_BUFFER_SIZE (49152)
 class TcpListen {
 public:
 	TcpListen(const char* ipAddress, int port) :m_ipAddress(ipAddress), m_port(port) { }

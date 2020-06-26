@@ -44,9 +44,9 @@ int TcpListen::run() {
 				onClientConnected(client);
 			}
 			else {
-				char buf[4096];
-				ZeroMemory(buf, 4096);
-				int bytesIn = recv(sock, buf, 4096, 0);
+				char buf[MAX_BUFFER_SIZE];
+				ZeroMemory(buf, MAX_BUFFER_SIZE);
+				int bytesIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
 				if (bytesIn <= 0) {
 					onClientDisconnected(sock);
 					closesocket(sock);
