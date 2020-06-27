@@ -29,6 +29,9 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		if (htmlFile == "/backgrund.png") {
 			htmlFile = ".\\img\\backgrund.png";
 		}
+		if (htmlFile == "/PoltavsckiyNCV.pdf") {
+			htmlFile = ".\\img\\PoltavsckiyNCV.pdf";
+		}
 		//root part with files
 		std::ifstream f(".\\" + htmlFile, std::ios::binary);
 		// grab files from root to str (error code ok)
@@ -54,6 +57,14 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
 		oss << "Cache-Control: no-cache, private\r\n";
 		oss << "Content-Type: image/png\r\n";
+		oss << "Content-Length: " << content.size() << "\r\n";
+		oss << "\r\n";
+		oss << content;
+	}
+	if (htmlFile == ".\\img\\PoltavsckiyNCV.pdf") {
+		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
+		oss << "Cache-Control: no-cache, private\r\n";
+		oss << "Content-Type: application/pdf\r\n";
 		oss << "Content-Length: " << content.size() << "\r\n";
 		oss << "\r\n";
 		oss << content;
