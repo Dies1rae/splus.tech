@@ -3,8 +3,8 @@
 <HEAD>
     <META NAME="cplus.tech" Content="while one">
     <TITLE>#cplusplus</TITLE>
-
     <style>
+        /*wrappers header of page*/
         .wrapper {
             height: 40px;
             color: hsl(288, 90%, 41%);
@@ -12,21 +12,19 @@
             padding-left: 2%;
             margin: 0;
         }
-
         .lwrapper {
             float: left;
             width: -moz-max-content;
             width: -webkit-max-content;
             color: transparent;
         }
-
         .rwrapper {
             float: right;
             width: -moz-max-content;
             width: -webkit-max-content;
             color: transparent;
         }
-
+        /*body css*/
         body {
             background-image: url(/backgrund.png);
             background-repeat: no-repeat;
@@ -35,7 +33,7 @@
             background-size: cover;
             background-color: #808080;
         }
-
+        /*jiust a part of scr*/
         .screenleft {
             font-stretch: extra-expanded;
             font-size: xx-large;
@@ -47,7 +45,6 @@
             padding: 70px 150px;
             color: hsl(258, 46%, 49%);
         }
-
         .screenright {
             font-stretch: extra-expanded;
             font-size: xx-large;
@@ -59,23 +56,27 @@
             padding: 70px 150px;
             color: hsl(258, 46%, 49%);
         }
-
         a {
             color: hsl(0, 0%, 100%);
             padding: 0px 10px 0px 10px;
+            cursor: none !important;
         }
-
         p {
+            position: center;
             font-display: auto;
             font-stretch: extra-expanded;
             font-size: 25px;
             font-family: 'Times New Roman';
             color: hsl(135, 3%, 2%);
             text-align: center;
+            background-color: rgb(128, 128, 128);
+            opacity: 0.5;
+            border: 5px solid black;   
+            padding: 20px 20px 20px 20px;
+            width: 500px;
         }
-
+        /*buttons css*/
         .button {
-            cursor: crosshair;
             padding: 5px 5px;
             font-size: 12px;
             text-align: center;
@@ -85,23 +86,44 @@
             border: 1px solid black;
             border-radius: 15px;
         }
-
         .button:hover {
                 color: black;
                 background-color: transparent;
             }
-
         .button:active {
                 background-color: hsl(288, 0%, 50%);
                 box-shadow: 0 5px #666;
                 transform: translateY(4px);
             }
-
-
-      
+        /*pointer area*/
+        #pointer-dot {
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 0;
+            border: 2.5px solid white;
+            position: fixed;
+            border-radius: 4px;
+            z-index: 1;
+            pointer-events: none;
+            transition: border-color 0.5s;
+        }
+        #pointer-ring {
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 0;
+            padding: 15px;
+            border: 2px solid #750c7e;
+            position: fixed;
+            border-radius: 100px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        html {
+            cursor: none !important;
+        }
     </style>
-
-
 
 </HEAD>
 <BODY>
@@ -122,10 +144,81 @@
     <br></br>
     <br></br>
     <br></br>
-    <p>“If you think it's simple, then you have  misunderstood the problem.”</p>
-    <p style="margin-left:490px;">Bjarne Stroustrup</p>
-    <div id="beat"></div>
-    
+    <center><p>“If you think it's simple, then you have  misunderstood the problem.”<br>Bjarne Stroustrup</p></center>
 
+    <script>
+        const pointer = document.createElement("div")
+        pointer.id = "pointer-dot"
+        const ring = document.createElement("div")
+        ring.id = "pointer-ring"
+        document.body.insertBefore(pointer, document.body.children[0])
+        document.body.insertBefore(ring, document.body.children[0])
+
+        let mouseX = -100
+        let mouseY = -100
+        let ringX = -100
+        let ringY = -100
+        let isHover = false
+        let mouseDown = false
+        const init_pointer = (options) => {
+
+            window.onmousemove = (mouse) => {
+                mouseX = mouse.clientX
+                mouseY = mouse.clientY
+            }
+
+            window.onmousedown = (mouse) => {
+                mouseDown = true
+            }
+
+            window.onmouseup = (mouse) => {
+                mouseDown = false
+            }
+
+            const trace = (a, b, n) => {
+                return (1 - n) * a + n * b;
+            }
+            window["trace"] = trace
+
+            const getOption = (option) => {
+                let defaultObj = {
+                    pointerColor: "White",
+                    ringSize: 15,
+                    ringClickSize: (options["ringSize"] || 15) - 5,
+                }
+                if (options[option] == undefined) {
+                    return defaultObj[option]
+                } else {
+                    return options[option]
+                }
+            }
+
+            const render = () => {
+                ringX = trace(ringX, mouseX, 0.2)
+                ringY = trace(ringY, mouseY, 0.2)
+
+                if (document.querySelector(".p-action-click:hover")) {
+                    pointer.style.borderColor = getOption("pointerColor")
+                    isHover = true
+                } else {
+                    pointer.style.borderColor = "Purple"
+                    isHover = false
+                }
+                ring.style.borderColor = getOption("pointerColor")
+                if (mouseDown) {
+                    ring.style.padding = getOption("ringClickSize") + "px"
+                } else {
+                    ring.style.padding = getOption("ringSize") + "px"
+                }
+
+                pointer.style.transform = `translate(${mouseX}px, ${mouseY}px)`
+                ring.style.transform = `translate(${ringX - (mouseDown ? getOption("ringClickSize") : getOption("ringSize"))}px, ${ringY - (mouseDown ? getOption("ringClickSize") : getOption("ringSize"))}px)`
+
+                requestAnimationFrame(render)
+            }
+            requestAnimationFrame(render)
+        }
+    </script>
+    <script>init_pointer({});</script>
 </BODY>
-</HTML >
+</HTML>
