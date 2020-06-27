@@ -7,7 +7,6 @@
 using namespace std;
 
 
-
 int main(int argc, char* argv[]) {
 	if (argc > 1 && argv[1][0] == '/') {
 		if (argv[1][1] == 's') {

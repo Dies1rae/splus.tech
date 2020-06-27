@@ -65,7 +65,6 @@ int TcpListen::run() {
 		FD_CLR(sock, &m_master);
 		closesocket(sock);
 	}
-
 	WSACleanup();
 	return 0;
 }
