@@ -39,7 +39,6 @@ int TcpListen::run() {
 			SOCKET sock = copy.fd_array[i];
 			if (sock == m_socket) {
 				SOCKET client = accept(m_socket, nullptr, nullptr);
-
 				FD_SET(client, &m_master);
 				onClientConnected(client);
 			}
