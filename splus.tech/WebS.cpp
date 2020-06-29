@@ -13,7 +13,11 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 	//client's request string e.g. GET /index.htm HTTP/1.1
 	std::istringstream iss(msg);
 	std::vector<std::string> parsed((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
-
+	/* client GET inf
+	for (auto ptr : parsed) {
+		std::cout << ptr << std::endl;
+	}
+	*/
 	//default 404 for CL if get not OK, otherwise index
 	std::string content = "<h1>404 Not Found</h1>";
 	std::string htmlFile = ".//index.htm";

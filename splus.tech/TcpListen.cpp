@@ -38,7 +38,14 @@ int TcpListen::run() {
 		for (int i = 0; i < socketCount; i++) {
 			SOCKET sock = copy.fd_array[i];
 			if (sock == m_socket) {
-				SOCKET client = accept(m_socket, nullptr, nullptr);
+				SOCKADDR_IN client_addr;
+				int addrlen = sizeof(client_addr);
+				SOCKET client;// = accept(m_socket, (struct sockaddr*)&client_addr, &addrlen);
+				if (client = accept(m_socket, (struct sockaddr*)&client_addr, &addrlen)) {
+					char ip[16];
+					inet_ntop(AF_INET, &(client_addr.sin_addr), ip, 16);
+					std::cout << ip << std::endl;
+				}
 				FD_SET(client, &m_master);
 				onClientConnected(client);
 			}
@@ -78,6 +85,7 @@ void TcpListen::broadcastToClients(int sendingClient, const char* msg, int lengt
 		SOCKET outSock = m_master.fd_array[i];
 		if (outSock != m_socket && outSock != sendingClient) {
 			sendToClient(outSock, msg, length);
+			
 		}
 	}
 }
