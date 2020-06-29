@@ -18,7 +18,7 @@
     <None Include="index.htm">
       <Filter>Исходные файлы</Filter>
     </None>
-    <None Include="..\x64\Release\index.htm">
+    <None Include="..\Release\index.htm">
       <Filter>Файлы заголовков</Filter>
     </None>
   </ItemGroup>

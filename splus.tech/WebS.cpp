@@ -36,6 +36,9 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		if (htmlFile == "/PoltavsckiyNCV.pdf") {
 			htmlFile = ".\\img\\PoltavsckiyNCV.pdf";
 		}
+		if (htmlFile == "/ipaddr.txt") {
+			htmlFile = ".\\ipaddr.txt";
+		}
 		//root part with files
 		std::ifstream f(".\\" + htmlFile, std::ios::binary);
 		// grab files from root to str (error code ok)
@@ -55,6 +58,13 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		oss << "Content-Type: text/html\r\n";
 		oss << "Content-Length: " << content.size() << "\r\n";
 		oss << "\r\n";
+		std::ifstream ip_file(".\\ipaddr.txt");
+		std::string IP_;
+		std::string LIP_;
+		while (std::getline(ip_file, IP_)){
+			LIP_ = IP_;
+		}
+		content.replace(content.find("<!--_IP_-->"), 11, LIP_);
 		oss << content;
 	}
 	if (htmlFile == ".\\img\\backgrund.png") {

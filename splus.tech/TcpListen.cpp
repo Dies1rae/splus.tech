@@ -2,6 +2,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
+#include <set>
+void logfile(char*);
 
 int TcpListen::init() {
 	WSADATA wsData;
@@ -40,12 +43,14 @@ int TcpListen::run() {
 			if (sock == m_socket) {
 				SOCKADDR_IN client_addr;
 				int addrlen = sizeof(client_addr);
+				//get addr client
 				SOCKET client;// = accept(m_socket, (struct sockaddr*)&client_addr, &addrlen);
 				if (client = accept(m_socket, (struct sockaddr*)&client_addr, &addrlen)) {
 					char ip[16];
 					inet_ntop(AF_INET, &(client_addr.sin_addr), ip, 16);
-					std::cout << ip << std::endl;
+					logfile(ip);
 				}
+				//-----
 				FD_SET(client, &m_master);
 				onClientConnected(client);
 			}
@@ -97,4 +102,18 @@ void TcpListen::onClientDisconnected(int clientSocket) {
 }
 void TcpListen::onMessageReceived(int clientSocket, const char* msg, int length) {
 
+}
+
+void logfile(char * ip) {
+	std::string filepath = ".\\ipaddr.txt";
+	std::ifstream check_file(filepath, std::ios::binary | std::ios::ate);
+	if (check_file.tellg() >= 1000 ) {
+		std::ofstream ip_file;
+		ip_file.open(filepath, std::ofstream::out | std::ofstream::trunc);
+		ip_file.close();
+	}
+	std::ofstream ip_file;
+	ip_file.open(filepath, std::ios_base::app);
+	ip_file << ip << '\n';
+	ip_file.close();
 }
