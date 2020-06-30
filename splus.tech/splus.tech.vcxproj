@@ -139,11 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="index.htm">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TcpListen.cpp" />
     <ClCompile Include="WebS.cpp" />
@@ -152,6 +147,11 @@
     <ClInclude Include="menu.h" />
     <ClInclude Include="TcpListen.h" />
     <ClInclude Include="WebS.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="index.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
