@@ -1,5 +1,5 @@
 # splus.tech
-This is simple repo for CPP CV page
+This is simple repo for CPP CV page on my own C++ webengine
 
 	Usage: cplus.tech.exe /s ... IP ... PORT
 	OPTIONS:
