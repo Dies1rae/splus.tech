@@ -13,3 +13,6 @@ This is simple repo for CPP CV page on my own C++ webengine
 	  cplus.tech.exe /h
 	  cplus.tech.exe /?
     
+/*!!!!!!!!!!!!
+After build and before start -  please add ipaddr.txt file in directory for ipaddr logs and correctly work index page. thnx!
+!!!!!!!!!!!*/
