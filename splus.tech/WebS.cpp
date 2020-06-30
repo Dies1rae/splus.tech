@@ -49,7 +49,8 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		}
 		f.close();
 	}
-	
+	// IN THIS BLOCK YOU MAY PLACE YOU FILES 
+	// by *.pdf, or hard  -  by names
 	//parse get and write down files to client
 	std::ostringstream oss;
 	if (htmlFile == "index.htm") {
@@ -71,14 +72,6 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
 		oss << "Cache-Control: no-cache, private\r\n";
 		oss << "Content-Type: image/png\r\n";
-		oss << "Content-Length: " << content.size() << "\r\n";
-		oss << "\r\n";
-		oss << content;
-	}
-	if (htmlFile == ".\\img\\PoltavsckiyNCV.pdf") {
-		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
-		oss << "Cache-Control: no-cache, private\r\n";
-		oss << "Content-Type: application/pdf\r\n";
 		oss << "Content-Length: " << content.size() << "\r\n";
 		oss << "\r\n";
 		oss << content;
