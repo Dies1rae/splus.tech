@@ -139,9 +139,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\Release\index.htm">
-      <DeploymentContent>true</DeploymentContent>
-    </None>
     <None Include="index.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>

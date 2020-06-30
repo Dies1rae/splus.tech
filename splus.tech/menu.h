@@ -1,9 +1,12 @@
 #pragma once
-#include <iostream>
+#if defined WIN32
 #include <windows.h>
+#endif
+#include <iostream>
 #include <iomanip>
 using namespace std;
 
+#if defined WIN32
 //func declar
 void help_menu_view();
 void hidecursor();
@@ -11,6 +14,7 @@ void UNhidecursor();
 void man_menu_view();
 //display main menu
 void man_menu_view() {
+	#if defined WIN32
 	hidecursor();
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	cout << endl << "***|";
@@ -45,6 +49,26 @@ void man_menu_view() {
 	cout << endl;
 	SetConsoleTextAttribute(hConsole, 7);
 	UNhidecursor();
+	#endif
+	cout << endl << "***|";
+	cout << "http serv";
+	cout << endl << "***|";
+	cout << "Help menu";
+	cout << endl << "***|" << "http serv(1)";
+	cout << endl << "***|" << "SYNOPSIS:";
+	cout << endl << "***|" << "		cplus.tech.exe [OPTION] ... [DATA]";
+	cout << endl << "***|" << "		cplus.tech.exe [OPTION] ... [DATA] ... [DATA]";
+	cout << endl << "***|" << "DESCRIPTION:";
+	cout << endl << "***|" << "		./cplus.tech.exe /s(server start) ... IPADDRESS FOR SRV ... PORT";
+	cout << endl << "***|" << "		./cplus.tech.exe /?(help menu)";
+	cout << endl << "***|" << "		./cplus.tech.exe /man(man menu)";
+	cout << endl << "...by Dies_Irae" << endl;
+	cout << endl;
+	cout << endl;
+	cout << endl;
+	cout << endl;
+	cout << endl;
+	cout << endl;
 }
 
 void help_menu_view() {
@@ -73,3 +97,4 @@ void UNhidecursor() {
 	info.bVisible = TRUE;
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
+#endif

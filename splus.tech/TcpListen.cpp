@@ -1,12 +1,27 @@
 #include "TcpListen.h"
+#if defined WIN32
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <set>
+#else
+#include <strings.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <sstream>
+#include <fstream>
+#include <set>
+#endif
 void logfile(char*);
 
 int TcpListen::init() {
+	#if defined WIN32
 	WSADATA wsData;
 	WORD ver = MAKEWORD(2, 2);
 	int wsOk = WSAStartup(ver, &wsData);
@@ -30,10 +45,27 @@ int TcpListen::init() {
 	}
 	FD_ZERO(&m_master);
 	FD_SET(m_socket, &m_master);
+	#else
+	//DO LINUX
+	listeningPort = m_port;
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	int yes = 1;
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+		cerr << errno << "  " << strerror(errno) << endl;
+	}
+	enable_keepalive(sockfd);
+	bzero(&servaddr, sizeof(servaddr));
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	servaddr.sin_port = htons(m_port);
+	started = false;
+	//--------
+	#endif
 	return 0;
 }
 
 int TcpListen::run() {
+	#if defined WIN32
 	bool running = true;
 	while (running) {
 		fd_set copy = m_master;
@@ -77,6 +109,7 @@ int TcpListen::run() {
 		closesocket(sock);
 	}
 	WSACleanup();
+	#endif
 	return 0;
 }
 
