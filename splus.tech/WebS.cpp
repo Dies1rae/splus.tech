@@ -33,9 +33,6 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		if (htmlFile == "/backgrund.png") {
 			htmlFile = ".\\img\\backgrund.png";
 		}
-		if (htmlFile == "/PoltavsckiyNCV.pdf") {
-			htmlFile = ".\\img\\PoltavsckiyNCV.pdf";
-		}
 		if (htmlFile == "/ipaddr.txt") {
 			htmlFile = ".\\ipaddr.txt";
 		}
