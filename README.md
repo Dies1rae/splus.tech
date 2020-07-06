@@ -1,6 +1,6 @@
 # splus.tech
 This is simple repo for CPP CV page on my own C++ webengine
-
+	Usage: cplus.tech.exe // this is default options for start on 0.0.0.0 80
 	Usage: cplus.tech.exe /s ... IP ... PORT
 	OPTIONS:
 	  s - Start server"
