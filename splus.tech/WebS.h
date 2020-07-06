@@ -10,4 +10,3 @@ protected:
 	virtual void onClientDisconnected(int clientSocket);
 	virtual void onMessageReceived(int clientSocket, const char* msg, int length);
 };
-
