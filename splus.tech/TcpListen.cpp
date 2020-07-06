@@ -231,7 +231,7 @@ char* TcpListen::get_cl_ip_addrs() {
 #endif
 
 void logfile(char* ip) {
-	std::string filepath = ".\\ipaddr.txt";
+	std::string filepath = "ipaddr.txt";
 	std::ifstream check_file(filepath, std::ios::binary | std::ios::ate);
 	if (check_file.tellg() >= 4000) {
 		std::ofstream ip_file;

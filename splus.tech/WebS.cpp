@@ -32,13 +32,13 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 			htmlFile = "index.htm";
 		}
 		if (htmlFile == "/backgrund.png") {
-			htmlFile = ".\\img\\backgrund.png";
+			htmlFile = "./img/backgrund.png";
 		}
 		if (htmlFile == "/ipaddr.txt") {
-			htmlFile = ".\\ipaddr.txt";
+			htmlFile = "ipaddr.txt";
 		}
 		//root part with files
-		std::ifstream f(".\\" + htmlFile, std::ios::binary);
+		std::ifstream f("./" + htmlFile, std::ios::binary);
 		// grab files from root to str (error code ok)
 		if (f.good()) {
 			std::string str((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
@@ -57,7 +57,7 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		oss << "Content-Type: text/html\r\n";
 		oss << "Content-Length: " << content.size() << "\r\n";
 		oss << "\r\n";
-		std::ifstream ip_file(".\\ipaddr.txt");
+		std::ifstream ip_file("ipaddr.txt");
 
 		content.replace(content.find("<!--_IP_-->"), 11, this->get_cl_ip_addrs());
 		oss << content;
@@ -152,7 +152,7 @@ for (auto ptr : parsed) {
 		oss << "Content-Type: text/html\r\n";
 		oss << "Content-Length: " << content.size() << "\r\n";
 		oss << "\r\n";
-		std::ifstream ip_file("./ipaddr.txt");
+		std::ifstream ip_file("ipaddr.txt");
 		std::string IP_;
 		IP_.assign(this->get_cl_ip_addrs(), 16);
 		content.replace(content.find("<!--_IP_-->"), 11, IP_);
