@@ -1,5 +1,4 @@
 #pragma once
-#ifdef _WIN32
 #include "TcpListen.h"
 
 
@@ -11,16 +10,4 @@ protected:
 	virtual void onClientDisconnected(int clientSocket);
 	virtual void onMessageReceived(int clientSocket, const char* msg, int length);
 };
-#else
-#include "TcpServer.h"
 
-class WebSrv : public TcpServer {
-public:
-	WebSrv(const char* IP, int P) :TcpServer(IP, P) { }
-protected:
-	virtual void onClientConnected(int clientSocket);
-	virtual void onClientDisconnected(int clientSocket);
-	virtual void onMessageReceived(int clientSocket, const char* msg, int length) override;
-};
-
-#endif
