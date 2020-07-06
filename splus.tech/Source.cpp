@@ -7,7 +7,7 @@
 #include "menu.h"
 using namespace std;
 #else
-#include "WebSrv.h"
+#include "WebS.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 	#else
 	string _ip = "0.0.0.0";
 	int _port = 80;
-	WebSrv mainS(_ip.c_str(), _port);
+	WebS mainS(_ip.c_str(), _port);
 	cout << "Server started" << endl;
 	if (mainS.init() != 0) {
 		cout << "Some error with server INIT() " << mainS.init() << endl;

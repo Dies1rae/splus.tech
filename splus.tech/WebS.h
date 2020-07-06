@@ -12,11 +12,11 @@ protected:
 	virtual void onMessageReceived(int clientSocket, const char* msg, int length);
 };
 #else
-#include "TcpServer.h"
+#include "TcpListen.h"
 
-class WebSrv : public TcpServer {
+class WebS : public TcpListen {
 public:
-	WebSrv(const char* IP, int P) :TcpServer(IP, P) { }
+	WebS(const char* IP, int P) :TcpListen(IP, P) { }
 protected:
 	virtual void onClientConnected(int clientSocket);
 	virtual void onClientDisconnected(int clientSocket);

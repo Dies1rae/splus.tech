@@ -6,7 +6,7 @@
 #include <fstream>
 #include <set>
 #else
-#include "TcpServer.h"
+#include "TcpListen.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -138,7 +138,7 @@ std::string TcpListen::get_cl_ip_addrs() {
 	return this->cl_ip_ad;
 }
 #else
-int TcpServer::init() {
+int TcpListen::init() {
 	svr_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (svr_socket == -1) {
 		cout << "Can't create a socket! Quitting" << endl;
@@ -158,7 +158,7 @@ int TcpServer::init() {
 	return 0;
 }
 
-int TcpServer::run() {
+int TcpListen::run() {
 	bool running = true;
 	while (running) {
 		FD_ZERO(fd_in);
@@ -199,27 +199,27 @@ int TcpServer::run() {
 	return 0;
 }
 
-void TcpServer::sendToClient(int clientSocket, const char* msg, int length) {
+void TcpListen::sendToClient(int clientSocket, const char* msg, int length) {
 	send(clientSocket, msg, length, 0);
 }
 
-void TcpServer::broadcastToClients(int sendingClient, const char* msg, int length) {
+void TcpListen::broadcastToClients(int sendingClient, const char* msg, int length) {
 	for (int i = 0; i < cl_so_main.size(); i++) {
 		sendToClient(cl_so_main[i], msg, length);
 	}
 }
 
-void TcpServer::onClientConnected(int clientSocket) {
+void TcpListen::onClientConnected(int clientSocket) {
 
 }
 
-void TcpServer::onClientDisconnected(int clientSocket) {
+void TcpListen::onClientDisconnected(int clientSocket) {
 
 }
-void TcpServer::onMessageReceived(int clientSocket, const char* msg, int length) {
+void TcpListen::onMessageReceived(int clientSocket, const char* msg, int length) {
 
 }
-char* TcpServer::get_cl_ip_addrs() {
+char* TcpListen::get_cl_ip_addrs() {
 	return this->cl_ip_addr;
 }
 

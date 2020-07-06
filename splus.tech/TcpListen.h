@@ -6,7 +6,7 @@
 #pragma comment (lib, "ws2_32.lib")
 #define MAX_BUFFER_SIZE (49152)
 #else
-#include "TcpServer.h"
+#include "TcpListen.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -51,9 +51,9 @@ private:
 	fd_set			m_master;
 };
 #else
-class TcpServer {
+class TcpListen {
 public:
-    TcpServer(const char* ipAddress, int port) {
+    TcpListen(const char* ipAddress, int port) {
         svr_addr = ipAddress;
         svr_port = port;
         svr_socket;

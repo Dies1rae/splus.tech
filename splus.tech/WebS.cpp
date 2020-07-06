@@ -85,7 +85,7 @@ void WebS::onClientDisconnected(int clientSocket) {
 
 }
 #else
-#include "WebSrv.h"
+#include "WebS.h"
 #include <cstring>
 #include <string.h>
 #include <string>
@@ -101,7 +101,7 @@ using namespace std;
 
 
 
-void WebSrv::onMessageReceived(int clientSocket, const char* msg, int length) {
+void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 	//client's request string e.g. GET /index.htm HTTP/1.1
 	std::istringstream iss(msg);
 	std::vector<std::string> parsed((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
@@ -172,10 +172,10 @@ for (auto ptr : parsed) {
 }
 
 //CLCONN
-void WebSrv::onClientConnected(int clientSocket) {
+void WebS::onClientConnected(int clientSocket) {
 }
 
 //CL DISCONN
-void WebSrv::onClientDisconnected(int clientSocket) {
+void WebS::onClientDisconnected(int clientSocket) {
 }
 #endif
