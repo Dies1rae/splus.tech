@@ -89,7 +89,7 @@ void help_menu_view() {
 	cout << "		cplus.tech.exe /h" << endl;
 	cout << "		cplus.tech.exe /?" << endl;
 }
-
+#ifdef _WIN32
 void hidecursor() {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO info;
@@ -102,4 +102,5 @@ void UNhidecursor() {
 	CONSOLE_CURSOR_INFO info;
 	info.bVisible = TRUE;
 	SetConsoleCursorInfo(consoleHandle, &info);
+#endif
 }
