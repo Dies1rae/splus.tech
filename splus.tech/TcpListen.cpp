@@ -151,7 +151,8 @@ int TcpListen::init() {
 	hint.sin_port = htons(svr_port);
 	inet_pton(AF_INET, svr_addr, &hint.sin_addr);
 
-	bind(svr_socket, (sockaddr*)&hint, sizeof(hint));
+	if (bind(svr_socket, (sockaddr*)&hint, sizeof(hint)))
+        throw std::system_error(errno, std::generic_category());
 
 	listen(svr_socket, SOMAXCONN);
 	cout << "server listen on: " << svr_port << endl;
