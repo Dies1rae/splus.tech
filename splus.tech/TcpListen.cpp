@@ -176,7 +176,7 @@ int TcpListen::run() {
 			cl_so_main.push_back(accept(svr_socket, (struct sockaddr*)&client_addr, (socklen_t*)&addrlen));
 			inet_ntop(AF_INET, &(client_addr.sin_addr), cl_ip_addr, 16);
 			logfile(cl_ip_addr);
-			onClientConnected(cl_so_main[cl_so_main.size()]);
+			onClientConnected(cl_so_main.back());
 		}
 		for (size_t i = 0;i < cl_so_main.size();i++) {
 			if (FD_ISSET(cl_so_main[i], fd_in)) {
