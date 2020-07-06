@@ -71,7 +71,7 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		oss << content;
 	}
 	std::string output = oss.str();
-	int size = output.size() + 2;
+	int size = output.size();
 	sendToClient(clientSocket, output.c_str(), size);
 }
 
@@ -167,7 +167,7 @@ for (auto ptr : parsed) {
 		oss << content;
 	}
 	std::string output = oss.str();
-	size_t size = output.size() + 2;
+	size_t size = output.size();
 	sendToClient(clientSocket, output.c_str(), size);
 }
 
