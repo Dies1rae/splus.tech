@@ -41,12 +41,12 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		std::ifstream f("./" + htmlFile, std::ios::binary);
 		// grab files from root to str (error code ok)
 		if (f.good()) {
-			std::string str((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
-			content = str;
+			content.assign(std::istreambuf_iterator<char>(f), {});
 			errorCode = 200;
 		}
 		f.close();
 	}
+    splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
 	// IN THIS BLOCK YOU MAY PLACE YOU FILES 
 	// by *.pdf, or hard  -  by names
 	//parse get and write down files to client
@@ -57,9 +57,6 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		oss << "Content-Type: text/html\r\n";
 		oss << "Content-Length: " << content.size() << "\r\n";
 		oss << "\r\n";
-		std::ifstream ip_file("ipaddr.txt");
-
-        splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
 		oss << content;
 	}
 	if (htmlFile == ".\\img\\backgrund.png") {
@@ -145,6 +142,11 @@ for (auto ptr : parsed) {
 	// IN THIS BLOCK YOU MAY PLACE YOU FILES 
 	// by *.pdf, or hard  -  by names
 	//parse get and write down files to client
+    {
+        std::string IP_;
+        IP_.assign(this->get_cl_ip_addrs(), 16);
+        splus::replaceAll(content, "<!--_IP_-->", IP_);
+    }
 	std::ostringstream oss;
 	if (htmlFile == "index.htm") {
 		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
@@ -152,10 +154,6 @@ for (auto ptr : parsed) {
 		oss << "Content-Type: text/html\r\n";
 		oss << "Content-Length: " << content.size() << "\r\n";
 		oss << "\r\n";
-		std::ifstream ip_file("ipaddr.txt");
-		std::string IP_;
-		IP_.assign(this->get_cl_ip_addrs(), 16);
-        splus::replaceAll(content, "<!--_IP_-->", IP_);
 		oss << content;
 	}
 	if (htmlFile == "./img/backgrund.png") {
