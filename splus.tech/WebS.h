@@ -5,10 +5,10 @@
 
 class WebS : public TcpListen {
 public:
-	WebS(const char* ipAddress, int port) :TcpListen(ipAddress, port) { }
+	WebS(const char* ipAddress, uint16_t port) :TcpListen(ipAddress, port) { }
 protected:
-	virtual void onClientConnected(int clientSocket);
-	virtual void onClientDisconnected(int clientSocket);
+	virtual void onClientConnected(int clientSocket) override;
+	virtual void onClientDisconnected(int clientSocket) override;
 	virtual void onMessageReceived(int clientSocket, const char* msg, int length);
 };
 #else
@@ -16,10 +16,10 @@ protected:
 
 class WebS : public TcpListen {
 public:
-	WebS(const char* IP, int P) :TcpListen(IP, P) { }
+	WebS(const char* IP, uint16_t P) :TcpListen(IP, P) { }
 protected:
-	virtual void onClientConnected(int clientSocket);
-	virtual void onClientDisconnected(int clientSocket);
+	virtual void onClientConnected(int clientSocket) override;
+	virtual void onClientDisconnected(int clientSocket) override;
 	virtual void onMessageReceived(int clientSocket, const char* msg, size_t length) override;
 };
 

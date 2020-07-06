@@ -33,7 +33,7 @@ using namespace std;
 #ifdef _WIN32
 class TcpListen {
 public:
-	TcpListen(const char* ipAddress, int port) :m_ipAddress(ipAddress), m_port(port), m_socket(NULL), m_master(), cl_ip_ad() { }
+	TcpListen(const char* ipAddress, uint16_t port) :m_ipAddress(ipAddress), m_port(port), m_socket(NULL), m_master(), cl_ip_ad() { }
 	std::string get_cl_ip_addrs();
 	int init();
 	int run();
@@ -45,7 +45,7 @@ protected:
 	void broadcastToClients(int sendingClient, const char* msg, size_t length);
 private:
 	const char*		m_ipAddress;
-	int				m_port;
+	uint16_t	    m_port;
 	int				m_socket;
 	std::string		cl_ip_ad;
 	fd_set			m_master;
@@ -53,7 +53,7 @@ private:
 #else
 class TcpListen {
 public:
-    TcpListen(const char* ipAddress, int port) {
+    TcpListen(const char* ipAddress, uint16_t port) {
         svr_addr = ipAddress;
         svr_port = port;
         std::fill(std::begin(cl_ip_addr), std::end(cl_ip_addr), 0);
@@ -72,7 +72,7 @@ protected:
     void broadcastToClients(int sendingClient, const char* msg, size_t length);
 private:
     const char* svr_addr;
-    int                   svr_port;
+    uint16_t              svr_port;
     int                   svr_socket;
     vector<int>           cl_so_main;
     char                  cl_ip_addr[16];

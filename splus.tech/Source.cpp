@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	if (argc > 1 && argv[1][0] == '/') {
 		if (argv[1][1] == 's') {
 			string IP = argv[2];
-			int port = stoi(argv[3]);
+			uint16_t port = stoi(argv[3]);
 			WebS siteserv(IP.c_str(), port);
 			if (siteserv.init() != 0) {
 				return 1;
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 	}
 	else {
 		string IP = "0.0.0.0";
-		int port = 80;
+		uint16_t port = 80;
 		WebS siteserv(IP.c_str(), port);
 		if (siteserv.init() != 0) {
 			return 1;
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 #else
 int main() {
     string _ip = "0.0.0.0";
-    int _port = 80;
+    uint16_t _port = 80;
     WebS mainS(_ip.c_str(), _port);
     cout << "Server started" << endl;
     if (mainS.init() != 0) {
