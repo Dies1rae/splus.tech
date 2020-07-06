@@ -154,7 +154,7 @@ int TcpListen::init() {
 	bind(svr_socket, (sockaddr*)&hint, sizeof(hint));
 
 	listen(svr_socket, SOMAXCONN);
-	cout << "server listen on: " << svr_socket << endl;
+	cout << "server listen on: " << svr_port << endl;
 	return 0;
 }
 
