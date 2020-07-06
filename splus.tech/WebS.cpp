@@ -98,10 +98,10 @@ using namespace std;
 
 
 
-void WebS::onMessageReceived(int clientSocket, const char* msg, size_t /*length*/) {
+void WebS::onMessageReceived(int clientSocket, const char* msg, size_t length) {
 	//client's request string e.g. GET /index.htm HTTP/1.1
-	std::istringstream iss(msg);
-	std::vector<std::string> parsed((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
+	std::istringstream iss(std::string(msg, length));
+	std::vector<std::string> parsed(std::istream_iterator<std::string>(iss), {});
 	/*
 //client GET inf
 for (auto ptr : parsed) {
@@ -117,20 +117,19 @@ for (auto ptr : parsed) {
 	if (parsed.size() >= 3 && parsed[0] == "GET") {
 		htmlFile = parsed[1];
 		// parse GET to separate files
+        
 		if (htmlFile == "/" || htmlFile == "/index.htm") {
 			htmlFile = "index.htm";
 		}
-		if (htmlFile == "/backgrund.png") {
-			htmlFile = "./img/backgrund.png";
-		}
-		if (htmlFile == "/ipaddr.txt") {
-			htmlFile = "./ipaddr.txt";
-		}
-		if (htmlFile == "/PoltavsckiyNCV.pdf") {
-			htmlFile = "./img/PoltavsckiyNCV.pdf";
-		}
+        if (htmlFile.size() && htmlFile.front() == '/')
+            htmlFile.insert(0, 1, '.');
+        if (htmlFile.find("..") != std::string::npos
+         || htmlFile.find(":")  != std::string::npos) {
+            errorCode = 401;
+            content = "<h1>Not allowed</h1>";
+        }
 		//root part with files
-		std::ifstream f("./" + htmlFile, std::ios::binary);
+		std::ifstream f(htmlFile, std::ios::binary);
 		// grab files from root to str (error code ok)
 		if (f.good()) {
 			std::string str((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
@@ -138,31 +137,26 @@ for (auto ptr : parsed) {
 			errorCode = 200;
 		}
 		f.close();
-	}
+	} else {
+        errorCode = 400;
+        content = "<h1>Bad request</h1>";
+    }
 	// IN THIS BLOCK YOU MAY PLACE YOU FILES 
 	// by *.pdf, or hard  -  by names
 	//parse get and write down files to client
     splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
-	std::ostringstream oss;
-	if (htmlFile == "index.htm") {
-		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
-		oss << "Cache-Control: no-cache, private\r\n";
-		oss << "Content-Type: text/html\r\n";
-		oss << "Content-Length: " << content.size() << "\r\n";
-		oss << "\r\n";
-		oss << content;
-	}
-	if (htmlFile == "./img/backgrund.png") {
-		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
-		oss << "Cache-Control: no-cache, private\r\n";
-		oss << "Content-Type: image/png\r\n";
-		oss << "Content-Length: " << content.size() << "\r\n";
-		oss << "\r\n";
-		oss << content;
-	}
-	std::string output = oss.str();
-	size_t size = output.size();
-	sendToClient(clientSocket, output.c_str(), size);
+    std::string const output = [&] {
+        std::ostringstream oss;
+        oss << "HTTP/1.1 " << errorCode << " OK\r\n";
+        oss << "Content-Type: " << splus::guess_content_type(htmlFile) << "\r\n";
+        oss << "Cache-Control: no-cache, private\r\n";
+        oss << "Content-Length: " << content.size() << "\r\n";
+        oss << "\r\n";
+        oss << content;
+        return oss.str();
+    }();
+
+	sendToClient(clientSocket, output.c_str(), output.size());
 }
 
 //CLCONN
