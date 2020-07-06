@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 			int port = stoi(argv[3]);
 			WebS siteserv(IP.c_str(), port);
 			if (siteserv.init() != 0) {
-				return 0;
+				return 1;
 			}
 			cout << "Server started" << endl;
 			siteserv.run();
@@ -39,14 +39,13 @@ int main(int argc, char* argv[]) {
 		int port = 80;
 		WebS siteserv(IP.c_str(), port);
 		if (siteserv.init() != 0) {
-			return 0;
+			return 1;
 		}
 		cout << "Server started" << endl;
 		siteserv.run();
 		system("pause");
 	}
 	mainS.run();
-	return 0;
 }
 #else
 int main() {
@@ -56,9 +55,8 @@ int main() {
     cout << "Server started" << endl;
     if (mainS.init() != 0) {
         cout << "Some error with server INIT() " << mainS.init() << endl;
-        return 0;
+        return 1;
     }
     mainS.run();
-    return 0;
 }
 #endif
