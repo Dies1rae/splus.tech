@@ -189,7 +189,7 @@ int TcpListen::run() {
 					FD_CLR(cl_so_main[i], fd_in);
 					FD_CLR(cl_so_main[i], fd_out);
 					FD_CLR(cl_so_main[i], fd_ex);
-					cl_so_main.erase(cl_so_main.begin() + i);
+                    cl_so_main[i] = -1;
 				}
 				else {
                     if (bytesIn>0) {
@@ -198,6 +198,9 @@ int TcpListen::run() {
 				}
 			}
 		}
+        cl_so_main.erase(
+                std::remove(begin(cl_so_main), end(cl_so_main), -1),
+                end(cl_so_main));
 	}
 	return 0;
 }
