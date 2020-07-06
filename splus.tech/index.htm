@@ -1,9 +1,11 @@
-﻿﻿<!DOCTYPE html>
-<HTML>
-<HEAD>
-    <META NAME="application-name" typeof="NAME OF THE GAME" Content="SOME CONT">
-    <TITLE>TITLE</TITLE>
-    <style>
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta name="generator" content="HTML Tidy for HTML5 for Linux version 5.2.0">
+<meta name="application-name" typeof="NAME OF THE GAME" content="SOME CONT">
+<title>TITLE</title>
+
+<style>
         /*wrappers header of page*/
         .wrapper {
             height: 40px;
@@ -95,16 +97,16 @@
             border-radius: 15px;
         }
 
-            .button:hover {
-                color: black;
-                background-color: transparent;
-            }
+        .button:hover {
+            color: black;
+            background-color: transparent;
+        }
 
-            .button:active {
-                background-color: hsl(288, 0%, 50%);
-                box-shadow: 0 5px #666;
-                transform: translateY(4px);
-            }
+        .button:active {
+            background-color: hsl(288, 0%, 50%);
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
         /*pointer area*/
         #pointer-dot {
             left: 0;
@@ -135,30 +137,28 @@
         html {
             cursor: none !important;
         }
-    </style>
-
-</HEAD>
-<BODY>
+</style>
+</head>
+<body>
     <div class="wrapper">
-        <div class="lwrapper">
-            <button class="button" ; onclick="location.href='https://www.google.com/';"> TEST</button>
-            <button class="button" ; onclick="location.href='https://www.google.com/';"> TEST</button>
-            <button class="button" ; onclick="location.href='https://www.google.com/';"> TEST </button>
-            <button class="button" ; onclick="location.href='https://www.google.com';">  TEST </button>
-            <button class="button" ; onclick="location.href='mailto:test@gmail.com';"> MAIL TEST </button>
-        </div>
-
-        <div class="rwrapper">
-            <button class="button" ; onclick="location.href='https://www.google.com/';"> TEST </button>
-            <button class="button" ; onclick="location.href='https://www.google.com/';"> TEST </button>
-            <button class="button" ; onclick="location.href = 'https://www.google.com/';">TEST</button>
+        <div class="lwrapper"><button class="button" onclick=
+        "location.href='https://www.google.com/';">TEST</button>
+            <button class="button" onclick="location.href='https://www.google.com/';">TEST</button>
+            <button class="button" onclick="location.href='https://www.google.com/';">TEST</button>
+            <button class="button" onclick="location.href='https://www.google.com';">TEST</button>
+            <button class="button" onclick="location.href='mailto:test@gmail.com';">MAIL TEST</button></div>
+        <div class="rwrapper"><button class="button" onclick="location.href='https://www.google.com/';">TEST</button>
+            <button class="button" onclick="location.href='https://www.google.com/';">TEST</button>
+            <button class="button" onclick="location.href = 'https://www.google.com/';">TEST</button>
         </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <center><p>“TEST”<br>TEST</p></center>
-    <div class="blwrapper">SOME INFO from WEB ENGINE: <!--_IP_--> </div>
+    <br/>
+    <br/>
+    <br/>
+    <center>
+        <p>“TEST”<br/>TEST</p>
+    </center>
+    <div class="blwrapper">SOME INFO from WEB ENGINE: 127.0.0.1</div>
     <script>
         const pointer = document.createElement("div")
         pointer.id = "pointer-dot"
@@ -232,7 +232,7 @@
             requestAnimationFrame(render)
         }
 
+        init_pointer({});
     </script>
-    <script>init_pointer({});</script>
-</BODY>
-</HTML>
+</body>
+</html>
