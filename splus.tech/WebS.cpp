@@ -142,11 +142,7 @@ for (auto ptr : parsed) {
 	// IN THIS BLOCK YOU MAY PLACE YOU FILES 
 	// by *.pdf, or hard  -  by names
 	//parse get and write down files to client
-    {
-        std::string IP_;
-        IP_.assign(this->get_cl_ip_addrs(), 16);
-        splus::replaceAll(content, "<!--_IP_-->", IP_);
-    }
+    splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
 	std::ostringstream oss;
 	if (htmlFile == "index.htm") {
 		oss << "HTTP/1.1 " << errorCode << " OK\r\n";

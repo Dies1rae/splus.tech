@@ -35,7 +35,7 @@ using namespace std;
 class TcpListen {
 public:
 	TcpListen(const char* ipAddress, uint16_t port) :m_ipAddress(ipAddress), m_port(port), m_socket(NULL), m_master(), cl_ip_ad() { }
-	std::string get_cl_ip_addrs();
+	std::string get_cl_ip_addrs() const;
 	int init();
 	int run();
 protected:
@@ -57,14 +57,13 @@ public:
     TcpListen(const char* ipAddress, uint16_t port) {
         svr_addr = ipAddress;
         svr_port = port;
-        std::fill(std::begin(cl_ip_addr), std::end(cl_ip_addr), 0);
         fd_in = new fd_set;
         fd_out = new fd_set;
         fd_ex = new fd_set;
     }
     int init();
     int run();
-    char* get_cl_ip_addrs();
+    std::string get_cl_ip_addrs() const;
 protected:
     virtual void onClientConnected(int clientSocket);
     virtual void onClientDisconnected(int clientSocket);
@@ -76,7 +75,7 @@ private:
     uint16_t              svr_port;
     int                   svr_socket;
     vector<int>           cl_so_main;
-    char                  cl_ip_addr[16];
+    std::string           cl_ip_addr;
     fd_set* fd_in;
     fd_set* fd_out;
     fd_set* fd_ex;

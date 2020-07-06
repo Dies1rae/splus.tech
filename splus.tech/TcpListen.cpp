@@ -33,7 +33,7 @@
 using namespace std;
 #endif
 
-void logfile(char*);
+void logfile(std::string_view ip);
 #ifdef _WIN32
 int TcpListen::init() {
 	WSADATA wsData;
@@ -134,7 +134,7 @@ void TcpListen::onMessageReceived(int clientSocket, const char* msg, size_t leng
 
 }
 
-std::string TcpListen::get_cl_ip_addrs() {
+std::string TcpListen::get_cl_ip_addrs() const {
 	return this->cl_ip_ad;
 }
 #else
@@ -174,7 +174,9 @@ int TcpListen::run() {
 			sockaddr_in client_addr;
 			int addrlen = sizeof(client_addr);
 			cl_so_main.push_back(accept(svr_socket, (struct sockaddr*)&client_addr, (socklen_t*)&addrlen));
-			inet_ntop(AF_INET, &(client_addr.sin_addr), cl_ip_addr, 16);
+            cl_ip_addr.resize(17, '\0');
+			inet_ntop(AF_INET, &(client_addr.sin_addr), cl_ip_addr.data(), 16);
+            cl_ip_addr.resize(strlen(cl_ip_addr.data()));
 			logfile(cl_ip_addr);
 			onClientConnected(cl_so_main.back());
 		}
@@ -225,7 +227,7 @@ void TcpListen::onClientDisconnected(int /*clientSocket*/) {
 void TcpListen::onMessageReceived(int /*clientSocket*/, const char* /*msg*/, size_t /*length*/) {
 
 }
-char* TcpListen::get_cl_ip_addrs() {
+std::string TcpListen::get_cl_ip_addrs() const {
 	return this->cl_ip_addr;
 }
 
@@ -233,16 +235,15 @@ char* TcpListen::get_cl_ip_addrs() {
 
 #endif
 
-void logfile(char* ip) {
-	std::string filepath = "ipaddr.txt";
-	std::ifstream check_file(filepath, std::ios::binary | std::ios::ate);
-	if (check_file.tellg() >= 4000) {
-		std::ofstream ip_file;
-		ip_file.open(filepath, std::ofstream::out | std::ofstream::trunc);
-		ip_file.close();
-	}
-	std::ofstream ip_file;
-	ip_file.open(filepath, std::ios_base::app);
-	ip_file << ip << '\n';
-	ip_file.close();
+void logfile(std::string_view ip) {
+	std::string const filepath = "ipaddr.txt";
+    {
+        std::ifstream check_file(filepath, std::ios::binary | std::ios::ate);
+        if (check_file.tellg() >= 4000) { // TODO FIXME log rotation should probably be someone else's job
+            std::ofstream ip_file;
+            ip_file.open(filepath, std::ofstream::out | std::ofstream::trunc);
+            ip_file.close();
+        }
+    }
+	std::ofstream(filepath, std::ios_base::app) << ip << '\n';
 }
