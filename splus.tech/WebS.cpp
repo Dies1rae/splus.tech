@@ -59,7 +59,7 @@ void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
 		oss << "\r\n";
 		std::ifstream ip_file("ipaddr.txt");
 
-		content.replace(content.find("<!--_IP_-->"), 11, this->get_cl_ip_addrs());
+        splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
 		oss << content;
 	}
 	if (htmlFile == ".\\img\\backgrund.png") {
@@ -155,7 +155,7 @@ for (auto ptr : parsed) {
 		std::ifstream ip_file("ipaddr.txt");
 		std::string IP_;
 		IP_.assign(this->get_cl_ip_addrs(), 16);
-		content.replace(content.find("<!--_IP_-->"), 11, IP_);
+        splus::replaceAll(content, "<!--_IP_-->", IP_);
 		oss << content;
 	}
 	if (htmlFile == "./img/backgrund.png") {
