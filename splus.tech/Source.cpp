@@ -13,8 +13,8 @@ using namespace std;
 using namespace std;
 #endif
 
+#ifdef _WIN32
 int main(int argc, char* argv[]) {
-	#ifdef _WIN32
 	if (argc > 1 && argv[1][0] == '/') {
 		if (argv[1][1] == 's') {
 			string IP = argv[2];
@@ -45,16 +45,20 @@ int main(int argc, char* argv[]) {
 		siteserv.run();
 		system("pause");
 	}
-	#else
-	string _ip = "0.0.0.0";
-	int _port = 80;
-	WebS mainS(_ip.c_str(), _port);
-	cout << "Server started" << endl;
-	if (mainS.init() != 0) {
-		cout << "Some error with server INIT() " << mainS.init() << endl;
-		return 0;
-	}
 	mainS.run();
-	#endif
 	return 0;
 }
+#else
+int main() {
+    string _ip = "0.0.0.0";
+    int _port = 80;
+    WebS mainS(_ip.c_str(), _port);
+    cout << "Server started" << endl;
+    if (mainS.init() != 0) {
+        cout << "Some error with server INIT() " << mainS.init() << endl;
+        return 0;
+    }
+    mainS.run();
+    return 0;
+}
+#endif

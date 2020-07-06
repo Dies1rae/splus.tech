@@ -101,7 +101,7 @@ using namespace std;
 
 
 
-void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
+void WebS::onMessageReceived(int clientSocket, const char* msg, size_t /*length*/) {
 	//client's request string e.g. GET /index.htm HTTP/1.1
 	std::istringstream iss(msg);
 	std::vector<std::string> parsed((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
@@ -167,15 +167,15 @@ for (auto ptr : parsed) {
 		oss << content;
 	}
 	std::string output = oss.str();
-	int size = output.size() + 2;
+	size_t size = output.size() + 2;
 	sendToClient(clientSocket, output.c_str(), size);
 }
 
 //CLCONN
-void WebS::onClientConnected(int clientSocket) {
+void WebS::onClientConnected(int /*clientSocket*/) {
 }
 
 //CL DISCONN
-void WebS::onClientDisconnected(int clientSocket) {
+void WebS::onClientDisconnected(int /*clientSocket*/) {
 }
 #endif

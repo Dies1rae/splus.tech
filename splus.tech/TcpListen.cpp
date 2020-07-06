@@ -111,11 +111,11 @@ int TcpListen::run() {
 }
 
 
-void TcpListen::sendToClient(int clientSocket, const char* msg, int length) {
+void TcpListen::sendToClient(int clientSocket, const char* msg, size_t length) {
 	send(clientSocket, msg, length, 0);
 }
 
-void TcpListen::broadcastToClients(int sendingClient, const char* msg, int length) {
+void TcpListen::broadcastToClients(int sendingClient, const char* msg, size_t length) {
 	for (int i = 0; i < m_master.fd_count; i++) {
 		SOCKET outSock = m_master.fd_array[i];
 		if (outSock != m_socket && outSock != sendingClient) {
@@ -130,7 +130,7 @@ void TcpListen::onClientConnected(int clientSocket) {
 void TcpListen::onClientDisconnected(int clientSocket) {
 
 }
-void TcpListen::onMessageReceived(int clientSocket, const char* msg, int length) {
+void TcpListen::onMessageReceived(int clientSocket, const char* msg, size_t length) {
 
 }
 
@@ -166,10 +166,10 @@ int TcpListen::run() {
 		FD_ZERO(fd_out);
 		FD_ZERO(fd_ex);
 		FD_SET(svr_socket, fd_in);
-		for (int i = 0;i < cl_so_main.size();i++) {
+		for (size_t i = 0;i < cl_so_main.size();i++) {
 			FD_SET(cl_so_main[i], fd_in);
 		}
-		int socketCount = select(FD_SETSIZE, fd_in, NULL, NULL, NULL);
+		/*int socketCount =*/ select(FD_SETSIZE, fd_in, NULL, NULL, NULL);
 		if (FD_ISSET(svr_socket, fd_in)) {
 			sockaddr_in client_addr;
 			int addrlen = sizeof(client_addr);
@@ -178,11 +178,11 @@ int TcpListen::run() {
 			logfile(cl_ip_addr);
 			onClientConnected(cl_so_main[cl_so_main.size()]);
 		}
-		for (int i = 0;i < cl_so_main.size();i++) {
+		for (size_t i = 0;i < cl_so_main.size();i++) {
 			if (FD_ISSET(cl_so_main[i], fd_in)) {
 				char buf[MAX_BUFFER_SIZE];
 				memset(buf, 0, MAX_BUFFER_SIZE);
-				int bytesIn = recv(cl_so_main[i], buf, MAX_BUFFER_SIZE, 0);
+				ssize_t bytesIn = recv(cl_so_main[i], buf, MAX_BUFFER_SIZE, 0);
 				if (bytesIn <= 0) {
 					onClientDisconnected(cl_so_main[i]);
 					close(cl_so_main[i]);
@@ -192,7 +192,9 @@ int TcpListen::run() {
 					cl_so_main.erase(cl_so_main.begin() + i);
 				}
 				else {
-					onMessageReceived(cl_so_main[i], buf, bytesIn);
+                    if (bytesIn>0) {
+                        onMessageReceived(cl_so_main[i], buf, static_cast<size_t>(bytesIn));
+                    }
 				}
 			}
 		}
@@ -200,24 +202,24 @@ int TcpListen::run() {
 	return 0;
 }
 
-void TcpListen::sendToClient(int clientSocket, const char* msg, int length) {
+void TcpListen::sendToClient(int clientSocket, const char* msg, size_t length) {
 	send(clientSocket, msg, length, 0);
 }
 
-void TcpListen::broadcastToClients(int sendingClient, const char* msg, int length) {
-	for (int i = 0; i < cl_so_main.size(); i++) {
+void TcpListen::broadcastToClients(int /*sendingClient*/, const char* msg, size_t length) {
+	for (size_t i = 0; i < cl_so_main.size(); i++) {
 		sendToClient(cl_so_main[i], msg, length);
 	}
 }
 
-void TcpListen::onClientConnected(int clientSocket) {
+void TcpListen::onClientConnected(int /*clientSocket*/) {
 
 }
 
-void TcpListen::onClientDisconnected(int clientSocket) {
+void TcpListen::onClientDisconnected(int /*clientSocket*/) {
 
 }
-void TcpListen::onMessageReceived(int clientSocket, const char* msg, int length) {
+void TcpListen::onMessageReceived(int /*clientSocket*/, const char* /*msg*/, size_t /*length*/) {
 
 }
 char* TcpListen::get_cl_ip_addrs() {

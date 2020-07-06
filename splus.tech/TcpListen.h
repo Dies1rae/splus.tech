@@ -40,9 +40,9 @@ public:
 protected:
 	virtual void onClientConnected(int clientSocket);
 	virtual void onClientDisconnected(int clientSocket);
-	virtual void onMessageReceived(int clientSocket, const char* msg, int length);
-	void sendToClient(int clientSocket, const char* msg, int length);
-	void broadcastToClients(int sendingClient, const char* msg, int length);
+	virtual void onMessageReceived(int clientSocket, const char* msg, size_t length);
+	void sendToClient(int clientSocket, const char* msg, size_t length);
+	void broadcastToClients(int sendingClient, const char* msg, size_t length);
 private:
 	const char*		m_ipAddress;
 	int				m_port;
@@ -56,9 +56,7 @@ public:
     TcpListen(const char* ipAddress, int port) {
         svr_addr = ipAddress;
         svr_port = port;
-        svr_socket;
-        cl_so_main;
-        cl_ip_addr[16] = '\0';
+        std::fill(std::begin(cl_ip_addr), std::end(cl_ip_addr), 0);
         fd_in = new fd_set;
         fd_out = new fd_set;
         fd_ex = new fd_set;
@@ -69,9 +67,9 @@ public:
 protected:
     virtual void onClientConnected(int clientSocket);
     virtual void onClientDisconnected(int clientSocket);
-    virtual void onMessageReceived(int clientSocket, const char* msg, int length);
-    void sendToClient(int clientSocket, const char* msg, int length);
-    void broadcastToClients(int sendingClient, const char* msg, int length);
+    virtual void onMessageReceived(int clientSocket, const char* msg, size_t length);
+    void sendToClient(int clientSocket, const char* msg, size_t length);
+    void broadcastToClients(int sendingClient, const char* msg, size_t length);
 private:
     const char* svr_addr;
     int                   svr_port;
