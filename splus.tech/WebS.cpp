@@ -7,11 +7,11 @@
 #include <iterator>
 #include <sstream>
 #include <streambuf>
-#include <string.h>
+#include <cstring>
 #include <string>
 #include <vector>
 
-void WebS::onMessageReceived(int clientSocket, std::string_view msg) {
+void WebS::onMessageReceived(client& c, std::string_view msg) {
     // client's request string e.g. GET /index.htm HTTP/1.1
     std::istringstream iss;
     iss.str(std::string(msg));
@@ -52,7 +52,7 @@ void WebS::onMessageReceived(int clientSocket, std::string_view msg) {
     // IN THIS BLOCK YOU MAY PLACE YOU FILES
     // by *.pdf, or hard  -  by names
     // parse get and write down files to client
-    splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
+    splus::replaceAll(content, "<!--_IP_-->", c.peer_ip_address);
     std::string const output = [&] {
         std::ostringstream oss;
         oss << "HTTP/1.1 " << errorCode << " OK\r\n";
@@ -64,8 +64,8 @@ void WebS::onMessageReceived(int clientSocket, std::string_view msg) {
         return oss.str();
     }();
 
-    sendToClient(clientSocket, output);
+    sendToClient(c, output);
 }
 
-void WebS::onClientConnected(int /*clientSocket*/) {}
-void WebS::onClientDisconnected(int /*clientSocket*/) {}
+void WebS::onClientConnected(client& /*c*/) {}
+void WebS::onClientDisconnected(client& /*c*/) {}

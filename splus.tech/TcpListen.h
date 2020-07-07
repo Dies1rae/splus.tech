@@ -33,21 +33,23 @@ class TcpListen {
     }
     int init();
     int run();
-    std::string get_cl_ip_addrs() const;
 
   protected:
-    virtual void onClientConnected(int clientSocket);
-    virtual void onClientDisconnected(int clientSocket);
-    virtual void onMessageReceived(int clientSocket, std::string_view msg);
-    void sendToClient(int clientSocket, std::string_view msg);
-    void broadcastToClients(int sendingClient, std::string_view msg);
+    struct client {
+        int socket_fd = -1;
+        std::string peer_ip_address;
+    };
+    virtual void onClientConnected(client&);
+    virtual void onClientDisconnected(client&);
+    virtual void onMessageReceived(client& c, std::string_view msg);
+    void sendToClient(client& c, std::string_view msg);
+    void broadcastToClients(client& c, std::string_view msg);
 
   private:
     const char* svr_addr;
     uint16_t svr_port;
     int svr_socket;
-    std::vector<int> cl_so_main;
-    std::string cl_ip_addr;
+    std::vector<client> clients;
     fd_set* fd_in;
     fd_set* fd_out;
     fd_set* fd_ex;

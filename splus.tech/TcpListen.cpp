@@ -6,12 +6,12 @@
 #include <iostream>
 #include <istream>
 #include <iterator>
-#include <limits.h>
+#include <climits>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <streambuf>
 #include <string>
 #include <sys/socket.h>
@@ -51,57 +51,74 @@ int TcpListen::run() {
         FD_ZERO(fd_out);
         FD_ZERO(fd_ex);
         FD_SET(svr_socket, fd_in);
-        for (size_t i = 0; i < cl_so_main.size(); i++) {
-            FD_SET(cl_so_main[i], fd_in);
+        for (auto& client : clients) {
+            FD_SET(client.socket_fd, fd_in);
         }
-        /*int socketCount =*/select(FD_SETSIZE, fd_in, NULL, NULL, NULL);
+        /*int socketCount =*/select(FD_SETSIZE, fd_in, nullptr, nullptr, nullptr);
         if (FD_ISSET(svr_socket, fd_in)) {
             sockaddr_in client_addr;
             int addrlen = sizeof(client_addr);
-            cl_so_main.push_back(accept(svr_socket, (struct sockaddr*)&client_addr, (socklen_t*)&addrlen));
-            cl_ip_addr.resize(17, '\0');
-            inet_ntop(AF_INET, &(client_addr.sin_addr), cl_ip_addr.data(), 16);
-            cl_ip_addr.resize(strlen(cl_ip_addr.data()));
-            logfile(cl_ip_addr);
-            onClientConnected(cl_so_main.back());
+            auto& newclient = clients.emplace_back();
+            newclient.socket_fd = accept(
+                    svr_socket,
+                    (struct sockaddr*)&client_addr,
+                    (socklen_t*)&addrlen);
+
+
+            newclient.peer_ip_address = [&] {
+                std::string ip;
+                ip.resize(17, '\0');
+                inet_ntop(AF_INET, &(client_addr.sin_addr), ip.data(), 16);
+                ip.resize(strlen(ip.data()));
+                return ip;
+            }();
+
+            logfile(newclient.peer_ip_address);
+            onClientConnected(newclient);
         }
-        for (size_t i = 0; i < cl_so_main.size(); i++) {
-            if (FD_ISSET(cl_so_main[i], fd_in)) {
+        for (auto& c : clients) {
+            int& fd = c.socket_fd; // by reference!
+            if (FD_ISSET(fd, fd_in)) {
                 char buf[MAX_BUFFER_SIZE];
                 memset(buf, 0, MAX_BUFFER_SIZE);
-                ssize_t bytesIn = recv(cl_so_main[i], buf, MAX_BUFFER_SIZE, 0);
+                ssize_t bytesIn = recv(fd, buf, MAX_BUFFER_SIZE, 0);
+
                 if (bytesIn <= 0) {
-                    onClientDisconnected(cl_so_main[i]);
-                    close(cl_so_main[i]);
-                    FD_CLR(cl_so_main[i], fd_in);
-                    FD_CLR(cl_so_main[i], fd_out);
-                    FD_CLR(cl_so_main[i], fd_ex);
-                    cl_so_main[i] = -1;
+                    onClientDisconnected(c);
+                    close(fd);
+                    FD_CLR(fd, fd_in);
+                    FD_CLR(fd, fd_out);
+                    FD_CLR(fd, fd_ex);
+                    fd = -1;
                 } else {
                     if (bytesIn > 0) {
-                        onMessageReceived(cl_so_main[i], std::string_view(buf, static_cast<size_t>(bytesIn)));
+                        onMessageReceived(c, std::string_view(buf, static_cast<size_t>(bytesIn)));
                     }
                 }
             }
         }
-        cl_so_main.erase(std::remove(begin(cl_so_main), end(cl_so_main), -1), end(cl_so_main));
+
+        clients.erase(
+            std::remove_if(
+                begin(clients), end(clients),
+                [](client const& c) { return c.socket_fd == -1; }),
+            end(clients));
     }
     return 0;
 }
 
-void TcpListen::sendToClient(int clientSocket, std::string_view msg) { send(clientSocket, msg.data(), msg.length(), 0); }
-
-void TcpListen::broadcastToClients(int /*sendingClient*/, std::string_view msg) {
-    for (size_t i = 0; i < cl_so_main.size(); i++) {
-        sendToClient(cl_so_main[i], msg);
-    }
+void TcpListen::sendToClient(client& client, std::string_view msg) {
+    send(client.socket_fd, msg.data(), msg.length(), 0);
 }
 
-void TcpListen::onClientConnected(int /*clientSocket*/) {}
+void TcpListen::broadcastToClients(client&, std::string_view msg) {
+    for (client& c : clients)
+        sendToClient(c, msg);
+}
 
-void TcpListen::onClientDisconnected(int /*clientSocket*/) {}
-void TcpListen::onMessageReceived(int /*clientSocket*/, std::string_view /*msg*/) {}
-std::string TcpListen::get_cl_ip_addrs() const { return this->cl_ip_addr; }
+void TcpListen::onClientConnected(client&) {}
+void TcpListen::onClientDisconnected(client&) {}
+void TcpListen::onMessageReceived(client&, std::string_view) {}
 
 void logfile(std::string_view ip) {
     std::string const filepath = "ipaddr.txt";
