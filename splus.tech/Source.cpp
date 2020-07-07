@@ -1,62 +1,43 @@
-#ifdef _WIN32
-#include <string>
-#include <iostream>
-#include <vector>
 #include "WebS.h"
-#include <algorithm>
 #include "menu.h"
-using namespace std;
-#else
-#include "WebS.h"
 #include <iostream>
 #include <string>
-using namespace std;
-#endif
+#include <string_view>
 
-#ifdef _WIN32
+namespace {
+    std::string_view IP = "0.0.0.0";
+    uint16_t port = 80;
+}
+
 int main(int argc, char* argv[]) {
-	if (argc > 1 && argv[1][0] == '/') {
-		if (argv[1][1] == 's') {
-			string IP = argv[2];
-			uint16_t port = stoi(argv[3]);
-			WebS siteserv(IP.c_str(), port);
-			if (siteserv.init() != 0) {
-				return 1;
-			}
-			cout << "Server started" << endl;
-			siteserv.run();
-			system("pause");
-		}
-		if (argv[1][1] == '?') {
-			help_menu_view();
-		}
-		if (argv[1][1] == 'm') {
-			man_menu_view();
-		}
-	}
-	else {
-		string IP = "0.0.0.0";
-		uint16_t port = 80;
-		WebS siteserv(IP.c_str(), port);
-		if (siteserv.init() != 0) {
-			return 1;
-		}
-		cout << "Server started" << endl;
-		siteserv.run();
-		system("pause");
-	}
+    std::vector<std::string_view> const args(argv, argv+argc);
+
+    if (count(begin(args), end(args), "/?")) {
+        help_menu_view(std::cout, args.front());
+        return 0;
+    }
+    if (count(begin(args), end(args), "/m")) {
+        man_menu_view(std::cout, args.front());
+        return 0;
+    }
+
+    auto shift = [&args](auto& it) {
+        if (it != end(args))
+            std::advance(it, 1);
+        if (it == end(args)) 
+            throw std::runtime_error("Missing option argument");
+        return *it;
+    };
+
+    if (auto it = find(begin(args), end(args), "/s"); end(args) != it) {
+        IP = shift(it);
+        port = static_cast<unsigned short>(atoi(shift(it).data()));
+    }
+
+    WebS mainS(IP.data(), port);
+    if (auto code = mainS.init()) {
+        return code;
+    }
+    std::clog << "Server started" << std::endl;
 	mainS.run();
 }
-#else
-int main() {
-    string _ip = "0.0.0.0";
-    uint16_t _port = 80;
-    WebS mainS(_ip.c_str(), _port);
-    cout << "Server started" << endl;
-    if (mainS.init() != 0) {
-        cout << "Some error with server INIT() " << mainS.init() << endl;
-        return 1;
-    }
-    mainS.run();
-}
-#endif

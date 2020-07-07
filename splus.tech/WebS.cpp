@@ -1,149 +1,57 @@
-#ifdef _WIN32
 #include "WebS.h"
-#include <string>
-#include <istream>
-#include <sstream>
+#include <algorithm>
+#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <streambuf>
-#include <vector>
+#include <istream>
 #include <iterator>
-#include <algorithm>
-
-void WebS::onMessageReceived(int clientSocket, const char* msg, int length) {
-	//client's request string e.g. GET /index.htm HTTP/1.1
-	std::istringstream iss(msg);
-	std::vector<std::string> parsed((std::istream_iterator<std::string>(iss)), std::istream_iterator<std::string>());
-	/* client GET inf
-	for (auto ptr : parsed) {
-		std::cout << ptr << std::endl;
-	}
-	*/
-	//default 404 for CL if get not OK, otherwise index
-	std::string content = "<h1>404 Not Found</h1>";
-	std::string htmlFile = ".//index.htm";
-	int errorCode = 404;
-
-	// If srv get GET request and its OK
-	if (parsed.size() >= 3 && parsed[0] == "GET") {
-		htmlFile = parsed[1];
-		// parse GET to separate files
-		if (htmlFile == "/" || htmlFile == "/index.htm") {
-			htmlFile = "index.htm";
-		}
-		if (htmlFile == "/backgrund.png") {
-			htmlFile = "./img/backgrund.png";
-		}
-		if (htmlFile == "/ipaddr.txt") {
-			htmlFile = "ipaddr.txt";
-		}
-		//root part with files
-		std::ifstream f("./" + htmlFile, std::ios::binary);
-		// grab files from root to str (error code ok)
-		if (f.good()) {
-			content.assign(std::istreambuf_iterator<char>(f), {});
-			errorCode = 200;
-		}
-		f.close();
-	}
-    splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
-	// IN THIS BLOCK YOU MAY PLACE YOU FILES 
-	// by *.pdf, or hard  -  by names
-	//parse get and write down files to client
-	std::ostringstream oss;
-	if (htmlFile == "index.htm") {
-		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
-		oss << "Cache-Control: no-cache, private\r\n";
-		oss << "Content-Type: text/html\r\n";
-		oss << "Content-Length: " << content.size() << "\r\n";
-		oss << "\r\n";
-		oss << content;
-	}
-	if (htmlFile == ".\\img\\backgrund.png") {
-		oss << "HTTP/1.1 " << errorCode << " OK\r\n";
-		oss << "Cache-Control: no-cache, private\r\n";
-		oss << "Content-Type: image/png\r\n";
-		oss << "Content-Length: " << content.size() << "\r\n";
-		oss << "\r\n";
-		oss << content;
-	}
-	std::string output = oss.str();
-	int size = output.size();
-	sendToClient(clientSocket, output.c_str(), size);
-}
-
-//CLCONN
-void WebS::onClientConnected(int clientSocket) {
-
-}
-
-//CL DISCONN
-void WebS::onClientDisconnected(int clientSocket) {
-
-}
-#else
-#include "WebS.h"
-#include <cstring>
+#include <sstream>
+#include <streambuf>
 #include <string.h>
 #include <string>
-#include <istream>
-#include <sstream>
-#include <fstream>
-#include <iostream>
-#include <streambuf>
 #include <vector>
-#include <iterator>
-#include <algorithm>
-using namespace std;
 
+void WebS::onMessageReceived(int clientSocket, std::string_view msg) {
+    // client's request string e.g. GET /index.htm HTTP/1.1
+    std::istringstream iss;
+    iss.str(std::string(msg));
+    std::vector<std::string> parsed(std::istream_iterator<std::string>(iss), {});
+    // default 404 for CL if get not OK, otherwise index
+    std::string content = "<h1>404 Not Found</h1>";
+    std::string htmlFile = "./index.htm";
+    int errorCode = 404;
 
+    // If srv get GET request and its OK
+    if (parsed.size() >= 3 && parsed[0] == "GET") {
+        htmlFile = parsed[1];
+        // parse GET to separate files
 
-void WebS::onMessageReceived(int clientSocket, const char* msg, size_t length) {
-	//client's request string e.g. GET /index.htm HTTP/1.1
-	std::istringstream iss(std::string(msg, length));
-	std::vector<std::string> parsed(std::istream_iterator<std::string>(iss), {});
-	/*
-//client GET inf
-for (auto ptr : parsed) {
-	std::cout << ptr << std::endl;
-}
-*/
-//default 404 for CL if get not OK, otherwise index
-	std::string content = "<h1>404 Not Found</h1>";
-	std::string htmlFile = "./index.htm";
-	int errorCode = 404;
-
-	// If srv get GET request and its OK
-	if (parsed.size() >= 3 && parsed[0] == "GET") {
-		htmlFile = parsed[1];
-		// parse GET to separate files
-        
-		if (htmlFile == "/" || htmlFile == "/index.htm") {
-			htmlFile = "index.htm";
-		}
+        if (htmlFile == "/" || htmlFile == "/index.htm") {
+            htmlFile = "index.htm";
+        }
         if (htmlFile.size() && htmlFile.front() == '/')
             htmlFile.insert(0, 1, '.');
-        if (htmlFile.find("..") != std::string::npos
-         || htmlFile.find(":")  != std::string::npos) {
+        if (htmlFile.find("..") != std::string::npos || htmlFile.find(":") != std::string::npos) {
             errorCode = 401;
             content = "<h1>Not allowed</h1>";
         }
-		//root part with files
-		std::ifstream f(htmlFile, std::ios::binary);
-		// grab files from root to str (error code ok)
-		if (f.good()) {
-			std::string str((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
-			content = str;
-			errorCode = 200;
-		}
-		f.close();
-	} else {
+        // root part with files
+        std::ifstream f(htmlFile, std::ios::binary);
+        // grab files from root to str (error code ok)
+        if (f.good()) {
+            std::string str((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+            content = str;
+            errorCode = 200;
+        }
+        f.close();
+    } else {
         errorCode = 400;
         content = "<h1>Bad request</h1>";
     }
-	// IN THIS BLOCK YOU MAY PLACE YOU FILES 
-	// by *.pdf, or hard  -  by names
-	//parse get and write down files to client
+
+    // IN THIS BLOCK YOU MAY PLACE YOU FILES
+    // by *.pdf, or hard  -  by names
+    // parse get and write down files to client
     splus::replaceAll(content, "<!--_IP_-->", get_cl_ip_addrs());
     std::string const output = [&] {
         std::ostringstream oss;
@@ -156,14 +64,8 @@ for (auto ptr : parsed) {
         return oss.str();
     }();
 
-	sendToClient(clientSocket, output.c_str(), output.size());
+    sendToClient(clientSocket, output);
 }
 
-//CLCONN
-void WebS::onClientConnected(int /*clientSocket*/) {
-}
-
-//CL DISCONN
-void WebS::onClientDisconnected(int /*clientSocket*/) {
-}
-#endif
+void WebS::onClientConnected(int /*clientSocket*/) {}
+void WebS::onClientDisconnected(int /*clientSocket*/) {}
