@@ -1,25 +1,19 @@
 #include "TcpListen.h"
-#include <algorithm>
-#include <arpa/inet.h>
-#include <cstring>
-#include <fstream>
-#include <iostream>
-#include <istream>
-#include <iterator>
-#include <climits>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sstream>
-#include <cstdio>
-#include <cstdlib>
-#include <streambuf>
-#include <string>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <vector>
+#include <algorithm>    // for remove_if
+#include <arpa/inet.h>  // for inet_ntop, inet_pton
+#include <cstring>      // for memset, strlen
+#include <errno.h>      // for errno
+#include <fstream>      // for operator<<, ofstream, operator|, endl, basic...
+#include <iostream>     // for cout
+#include <iterator>     // for end, begin
+#include <netinet/in.h> // for sockaddr_in, htons
+#include <stdio.h>      // for size_t
+#include <string>       // for string, allocator, char_traits<>::pos_type
+#include <sys/socket.h> // for AF_INET, accept, bind, listen, recv, send
+#include <sys/types.h>  // for ssize_t
+#include <system_error> // for generic_category, system_error
+#include <unistd.h>     // for close
+#include <vector>       // for vector
 
 static void logfile(std::string_view ip);
 

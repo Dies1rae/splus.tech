@@ -1,7 +1,7 @@
 #pragma once
-
-#include <string>
-#include <string_view>
+#include <stddef.h>     // for size_t
+#include <string>       // for string
+#include <string_view>  // for string_view
 
 namespace splus {
     bool replace(std::string& text, std::string_view what, std::string_view by);

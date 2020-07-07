@@ -1,25 +1,10 @@
 #pragma once
-#include "Util.h" // the worst name ever
-
 #include "TcpListen.h"
-#include <algorithm>
-#include <arpa/inet.h>
-#include <cstring>
-#include <fstream>
-#include <limits.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <set>
-#include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <vector>
+#include <bits/stdint-uintn.h> // for uint16_t
+#include <string>              // for string, basic_string
+#include <string_view>         // for string_view
+#include <sys/select.h>        // for fd_set
+#include <vector>              // for vector
 #define MAX_BUFFER_SIZE (49152)
 
 class TcpListen {

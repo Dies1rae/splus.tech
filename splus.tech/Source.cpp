@@ -1,8 +1,13 @@
-#include "WebS.h"
-#include "menu.h"
-#include <iostream>
-#include <string>
-#include <string_view>
+#include "WebS.h"              // for WebS
+#include "menu.h"              // for help_menu_view, man_menu_view
+#include <algorithm>           // for count, find
+#include <bits/stdint-uintn.h> // for uint16_t
+#include <iostream>            // for operator<<, cout, endl, basic_ostream
+#include <iterator>            // for end, begin, advance
+#include <stdexcept>           // for runtime_error
+#include <stdlib.h>            // for atoi
+#include <string_view>         // for string_view, operator==, basic_string...
+#include <vector>              // for vector
 
 namespace {
     std::string_view IP = "0.0.0.0";

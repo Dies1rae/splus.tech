@@ -1,15 +1,12 @@
+#include "Util.h" // for guess_content_type, replaceAll
 #include "WebS.h"
-#include <algorithm>
-#include <cstring>
-#include <fstream>
-#include <iostream>
-#include <istream>
-#include <iterator>
-#include <sstream>
-#include <streambuf>
-#include <cstring>
-#include <string>
-#include <vector>
+#include <ext/alloc_traits.h> // for __alloc_traits<>::value_type
+#include <istream>            // for operator<<, basic_ostream, ostringstream
+#include <iterator>           // for istreambuf_iterator, istream_iterator
+#include <string>             // for string, char_traits, operator==, alloc...
+#include <vector>             // for vector
+#include <sstream>            // for istringstream
+#include <fstream>            // for ifstream
 
 void WebS::onMessageReceived(client& c, std::string_view msg) {
     // client's request string e.g. GET /index.htm HTTP/1.1
